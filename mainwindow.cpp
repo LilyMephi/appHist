@@ -2,11 +2,9 @@
 #include <iostream>
 MainWindow::MainWindow(QWidget *parent = nullptr) : QMainWindow(parent) {
     
-    setupUI();
-    // Создаем менюбар
-    menu = this->menuBar(); 
+    setupUI(); 
     
-    setupMenuBar();    
+    //setupMenuBar();    
     
     // Настраиваем окно
     setWindowTitle("Hist");
@@ -15,7 +13,8 @@ MainWindow::MainWindow(QWidget *parent = nullptr) : QMainWindow(parent) {
 }
 
 void MainWindow::setupMenuBar(){
-  
+ // Создаем менюбар
+    menu = this->menuBar();
     // Добавляем вкладку "File"
     QMenu *fileMenu = menu->addMenu("Edit");
     
@@ -36,18 +35,9 @@ void MainWindow::setupMenuBar(){
 }
 void MainWindow::setupUI(){
     // Создаем виджет и распологаем его по середине
-    QWidget *centralWidget = new QWidget(this);
+    centralWidget = new QWidget(this);
     setCentralWidget(centralWidget);
-    
-    // Создаем виджет для отображения диаграммы
-    chartView = new QChartView(this);    
-    // Устанавливаем виджет диаграммы в центральную область окна
-    setCentralWidget(chartView);
-    
-    //Рисуем пустой график
-    drawemptyHist();
-    chartView->setRenderHint(QPainter::Antialiasing);
-    
+        
     // Создаем текст
     label = new QLabel(
         QString("<b>Максимальные значения:</b><br>"
@@ -55,14 +45,16 @@ void MainWindow::setupUI(){
                 "Максимальное значение Y: %2<br>"
                 "Минимальное значение X: %3<br>"
                 "Минимальное значение Y: %4")
-            .arg(axisX->max())
-            .arg(axisY->max())
-            .arg(axisX->min())
-            .arg(axisY->min())
+            .arg(0)
+            .arg(0)
+            .arg(0)
+            .arg(0)
     );
     
     // Выравниваем текст по левому краю
     label->setAlignment(Qt::AlignLeft | Qt::AlignTop);
+    
+    drawemptyHist();
     
     // Создаем layout и добавляем в него текст и график
     QHBoxLayout *layout = new QHBoxLayout;
@@ -139,7 +131,9 @@ void  MainWindow :: drawemptyHist(){
     // Включаем сетку
     axisX->setGridLineVisible(true);
     axisY->setGridLineVisible(true);
-    chartView->setChart(chart);
+    
+    chartView = new QChartView(chart);
+    chartView->setRenderHint(QPainter::Antialiasing);
 
 }
 void MainWindow::buildChart(const QVector<QPointF> &points){
@@ -164,7 +158,8 @@ void MainWindow::buildChart(const QVector<QPointF> &points){
     axisX->setGridLineVisible(true);
     axisY->setGridLineVisible(true);
 
-    chartView->setChart(chart);
+    chartView = new QChartView(chart);
+    chartView->setRenderHint(QPainter::Antialiasing);
 }
 
 //void MainWindow::addMenuBar(){

@@ -20,5 +20,6 @@
 #include <QFormLayout>
 #include <QPushButton>
 #include <QLabel>
+#include <QGroupBox>
 
 #endif

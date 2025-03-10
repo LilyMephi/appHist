@@ -33,6 +33,7 @@ private:
     QValueAxis *axisY;
     QLabel *label;
     QMenuBar *menu;
+    QWidget *centralWidget;
     //DraggableAxisChartView *chartView;
     //void createToolbar();
     //void createHist();
