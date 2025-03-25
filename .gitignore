@@ -1,0 +1,6 @@
+*.o
+qt_aplication
+*.png
+*.txt
+moc*
+

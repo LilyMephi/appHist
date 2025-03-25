@@ -8,18 +8,18 @@
 #include <QtCharts/QLineSeries>
 #include <QFile>
 #include <QTextStream>
-#include <QVBoxLayout>
 #include <QtWidgets/QToolBar>
 #include <QTextStream>
-#include <QVBoxLayout>
-#include <QFileDialog>
-#include <QMessageBox>
-#include <QLineEdit>
-#include <QLineEdit>
-#include <QDialog>
-#include <QFormLayout>
-#include <QPushButton>
-#include <QLabel>
-#include <QGroupBox>
+#include <QtWidgets/QHBoxLayout>
+#include <QtWidgets/QVBoxLayout>
+#include <QtWidgets/QFileDialog>
+#include <QtWidgets/QMessageBox>
+#include <QtWidgets/QLineEdit>
+#include <QtWidgets/QDialog>
+#include <QtWidgets/QFormLayout>
+#include <QtWidgets/QPushButton>
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QGroupBox>
+
 
 #endif

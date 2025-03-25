@@ -3,7 +3,7 @@
 
 #include "headers.h"
 #include "menuBar.hpp"
-#include "squareCalc.hpp"
+#include "windowWidget.hpp"
 
 QT_CHARTS_USE_NAMESPACE // Используем пространство имен Qt Charts
 
@@ -14,29 +14,26 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *);
 
+protected:
+//#ifndef QT_NO_CONTEXTMENU
+//    void contextMenuEvent(QContextMenuEvent *event) override;
+//#endif // QT_NO_CONTEXTMENU
 private slots:
     void openFile();
-    void drawemptyHist();
     void saveHist();
     void resizeDialog();
-    void buildChart(const QVector<QPointF> &points);
-    void setupUI();
     void setupMenuBar();
+    void loadFromUSB();
+    void loadFromUART();
+    void setupAtmegaBar();
 //    bool save();
 //    bool saveAs();
 //    void about();
 
 private:
-    QChartView *chartView; // Виджет для отображения диаграммы
-    QChart *chart;
-    QValueAxis *axisX;
-    QValueAxis *axisY;
-    QLabel *label;
+    Window* central;
     QMenuBar *menu;
     QWidget *centralWidget;
-    //DraggableAxisChartView *chartView;
-    //void createToolbar();
-    //void createHist();
 };
 //#include "main.moc"
 #endif // MAINWINDOW_H
