@@ -6,6 +6,7 @@
 #include <QtCharts/QChartView>
 #include <QtCharts/QValueAxis>
 #include <QtCharts/QLineSeries>
+#include <QtCharts>
 #include <QFile>
 #include <QTextStream>
 #include <QtWidgets/QToolBar>
@@ -19,7 +20,9 @@
 #include <QtWidgets/QFormLayout>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QLabel>
+
 #include <QtWidgets/QGroupBox>
+#include <QMap>
 
 
 #endif

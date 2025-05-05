@@ -3,4 +3,5 @@ qt_aplication
 *.png
 *.txt
 moc*
-
+.qmake.stash
+.vscode/

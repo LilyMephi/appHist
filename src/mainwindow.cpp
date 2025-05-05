@@ -1,11 +1,18 @@
 #include "mainwindow.hpp"
 #include <iostream>
-MainWindow::MainWindow(QWidget *parent = nullptr) : QMainWindow(parent) {
+
+MainWindow::MainWindow(QWidget *parent = nullptr) : QMainWindow(parent){
     
+    m_fileReader = new FileReader(this);
     // Создаем виджет и распологаем его по середине
     central = new Window(this);
     setCentralWidget(central); 
-    
+
+    connect(m_fileReader, &FileReader::fileUpdated, 
+        this, &MainWindow::onFileUpdated);
+    connect(m_fileReader, &FileReader::errorOccurred, 
+        this, &MainWindow::onErrorOccurred);
+
     setupMenuBar();  
     setupAtmegaBar();  
     
@@ -13,6 +20,13 @@ MainWindow::MainWindow(QWidget *parent = nullptr) : QMainWindow(parent) {
     setWindowTitle("Hist");
     resize(800, 600);
     
+}
+
+MainWindow::~MainWindow()
+{
+    delete central;
+    delete menu;
+    delete m_fileReader;
 }
 
 void MainWindow::setupMenuBar(){
@@ -26,7 +40,7 @@ void MainWindow::setupMenuBar(){
     
     // Добавляем действие "Open File"
     QAction *openFileAction = fileMenu->addAction("Open File");
-    connect(openFileAction, &QAction::triggered, this, &MainWindow::openFile);
+    connect(openFileAction, &QAction::triggered, this, &MainWindow::onOpenFile);
     
     // Добавляем действие "save hist"
     QAction *saveHistAction = fileMenu->addAction("save Hist");
@@ -63,50 +77,81 @@ void MainWindow::loadFromUSB(){
 void MainWindow::loadFromUART(){
 }
 
-void MainWindow::openFile(){
-    // Открываем диалог выбора файла
-    QString fileName = QFileDialog::getOpenFileName(this, "Открыть файл", "", "Текстовые файлы (*.txt);;Все файлы (*)");
+// void MainWindow::openFile(){
+//     // Открываем диалог выбора файла
+//     QString fileName = QFileDialog::getOpenFileName(this, "Открыть файл", "", "Текстовые файлы (*.txt);;Все файлы (*)");
 
-    if (fileName.isEmpty()) {
-        QMessageBox::warning(this, "Ошибка", "Файл не выбран!");
+//     if (fileName.isEmpty()) {
+//         QMessageBox::warning(this, "Ошибка", "Файл не выбран!");
+//         return;
+//     }
+
+//     // Чтение данных из файла
+//     QFile file(fileName);
+//     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+//         QMessageBox::critical(this, "Ошибка", "Не удалось открыть файл!");
+//         return;
+//     }
+
+//     //QVector<QPointF> points;
+//     QMap<double, int> eventN;
+//     QTextStream in(&file);
+//     while (!in.atEnd()) {
+//         QString line = in.readLine();
+//         bool flagRead = true;
+//         double value = line.toDouble(&flagRead);
+//         if(flagRead){
+//             ++eventN[value];
+//         }
+
+//     }
+//     file.close();
+
+//     // Если данные не прочитаны, выводим сообщение
+//     if (eventN.isEmpty()) {
+//         QMessageBox::warning(this, "Ошибка", "Файл не содержит данных!");
+//         return;
+//     }
+
+//     // Строим диаграмму
+//     central->updatePlot(eventN);
+// }
+
+void MainWindow::onOpenFile()
+{
+    QString fileName = QFileDialog::getOpenFileName(this, "Открыть файл");
+    if (fileName.isEmpty())
+        return;
+    std::cout << "Opening file " << std::endl;
+    if (!m_fileReader->openFile(fileName))
+    {
+        QMessageBox::warning(this, "Ошибка", "Ошибка чтении файла!");
         return;
     }
-
-    // Чтение данных из файла
-    QFile file(fileName);
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        QMessageBox::critical(this, "Ошибка", "Не удалось открыть файл!");
-        return;
-    }
-
-    //QVector<QPointF> points;
-    QVector<double> eventN;
-    QTextStream in(&file);
-    while (!in.atEnd()) {
-        QString line = in.readLine();
-        eventN = line.toDouble();
-        //QStringList values = line.split(" ");
-//        if (values.size() == 2) {
-//            double y = values[0].toDouble();
-//            double x = values[1].toDouble();
-//            points.append(QPointF(x, y));
-//        }
-    }
-    file.close();
-
-    // Если данные не прочитаны, выводим сообщение
-    if (points.isEmpty()) {
-        QMessageBox::warning(this, "Ошибка", "Файл не содержит данных!");
-        return;
-    }
-
-    // Строим диаграмму
-    central->redrawPlot(points);
 }
 
+void MainWindow::onFileUpdated(const QMap<double, int> content)
+{
+    if(m_fileReader->truePosition == false){
+        allData.clear();
+    }
 
-//void MainWindow::addMenuBar(){
-//}
+    //  Добавляем новые данные к существующим
+    for (auto it = content.begin(); it != content.end(); ++it) {
+        allData[it.key()] += it.value();
+    }
+
+    central->updatePlot(allData);
+    std::cout << "update plot" << std:: endl;
+}
+
+void MainWindow::onErrorOccurred(const QString &message)
+{
+    QMessageBox::warning(this, "Ошибка", message);
+}
+
+// void MainWindow::addMenuBar(){
+// }
 void MainWindow::saveHist(){
     // Открываем диалог выбора файла
     QString fileName = QFileDialog::getSaveFileName(this, "Сохранить график", "", "PNG файлы (*.png);;Все файлы (*)");
@@ -127,13 +172,13 @@ void MainWindow::resizeDialog(){
     ResizeDialog dialog(this);
     if (dialog.exec() == QDialog::Accepted) {
         // Получаем новые значения диапазона
-        double xMin = dialog.xMin();
-        double xMax = dialog.xMax();
+        //double xMin = dialog.xMin();
+        //double xMax = dialog.xMax();
         double yMin = dialog.yMin();
         double yMax = dialog.yMax();
 
         // Обновляем диапазон осей
-        central->axisX->setRange(xMin, xMax);
+        //central->axisX->setRange(xMin, xMax);
         central->axisY->setRange(yMin, yMax);
     }
 }

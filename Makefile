@@ -14,10 +14,10 @@ EQ            = =
 
 CC            = gcc
 CXX           = g++
-DEFINES       = -DQT_NO_DEBUG -DQT_CHARTS_LIB -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB
+DEFINES       = -DQT_NO_DEBUG -DQT_CHARTS_LIB -DQT_PRINTSUPPORT_LIB -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB
 CFLAGS        = -pipe -O2 -Wall -Wextra -D_REENTRANT -fPIC $(DEFINES)
 CXXFLAGS      = -pipe -O2 -std=gnu++1z -Wall -Wextra -D_REENTRANT -fPIC $(DEFINES)
-INCPATH       = -I. -I. -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtCharts -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++
+INCPATH       = -I. -Iinclude -I3rdparty -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtCharts -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -Imocs -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++
 QMAKE         = /usr/lib/qt5/bin/qmake
 DEL_FILE      = rm -f
 CHK_DIR_EXISTS= test -d
@@ -37,10 +37,10 @@ MOVE          = mv -f
 TAR           = tar -cf
 COMPRESS      = gzip -9f
 DISTNAME      = qt_aplication1.0.0
-DISTDIR = /home/lilycherly/work/diplom/qt_aplication/.tmp/qt_aplication1.0.0
+DISTDIR = /home/lilycherly/work/diplom/qt_aplication/objs/qt_aplication1.0.0
 LINK          = g++
 LFLAGS        = -Wl,-O1
-LIBS          = $(SUBLIBS) /usr/lib/x86_64-linux-gnu/libQt5Charts.so /usr/lib/x86_64-linux-gnu/libQt5Widgets.so /usr/lib/x86_64-linux-gnu/libQt5Gui.so /usr/lib/x86_64-linux-gnu/libQt5Core.so -lGL -lpthread   
+LIBS          = $(SUBLIBS) /usr/lib/x86_64-linux-gnu/libQt5Charts.so /usr/lib/x86_64-linux-gnu/libQt5PrintSupport.so /usr/lib/x86_64-linux-gnu/libQt5Widgets.so /usr/lib/x86_64-linux-gnu/libQt5Gui.so /usr/lib/x86_64-linux-gnu/libQt5Core.so -lGL -lpthread   
 AR            = ar cqs
 RANLIB        = 
 SED           = sed
@@ -48,27 +48,35 @@ STRIP         = strip
 
 ####### Output directory
 
-OBJECTS_DIR   = ./
+OBJECTS_DIR   = objs/
 
 ####### Files
 
-SOURCES       = main.cpp \
-		mainwindow.cpp \
-		menuBar.cpp \
-		squareCalc.cpp \
-		windowWidget.cpp moc_mainwindow.cpp \
-		moc_menuBar.cpp \
-		moc_squareCalc.cpp \
-		moc_windowWidget.cpp
-OBJECTS       = main.o \
-		mainwindow.o \
-		menuBar.o \
-		squareCalc.o \
-		windowWidget.o \
-		moc_mainwindow.o \
-		moc_menuBar.o \
-		moc_squareCalc.o \
-		moc_windowWidget.o
+SOURCES       = src/fileRead.cpp \
+		src/mainwindow.cpp \
+		src/menuBar.cpp \
+		src/squareCalc.cpp \
+		src/windowWidget.cpp \
+		main.cpp \
+		3rdparty/qcustomplot.cpp mocs/moc_fileRead.cpp \
+		mocs/moc_mainwindow.cpp \
+		mocs/moc_menuBar.cpp \
+		mocs/moc_squareCalc.cpp \
+		mocs/moc_windowWidget.cpp \
+		mocs/moc_qcustomplot.cpp
+OBJECTS       = objs/fileRead.o \
+		objs/mainwindow.o \
+		objs/menuBar.o \
+		objs/squareCalc.o \
+		objs/windowWidget.o \
+		objs/main.o \
+		objs/qcustomplot.o \
+		objs/moc_fileRead.o \
+		objs/moc_mainwindow.o \
+		objs/moc_menuBar.o \
+		objs/moc_squareCalc.o \
+		objs/moc_windowWidget.o \
+		objs/moc_qcustomplot.o
 DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/unix.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/linux.conf \
@@ -110,6 +118,7 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_platformcompositor_support_private.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_printsupport.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_printsupport_private.pri \
+		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_serialport.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_service_support_private.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_sql.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_sql_private.pri \
@@ -148,15 +157,19 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/exceptions.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/yacc.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/lex.prf \
-		qt_aplication.pro headers.h \
-		mainwindow.hpp \
-		menuBar.hpp \
-		squareCalc.hpp \
-		windowWidget.hpp main.cpp \
-		mainwindow.cpp \
-		menuBar.cpp \
-		squareCalc.cpp \
-		windowWidget.cpp
+		qt_aplication.pro include/fileRead.hpp \
+		include/mainwindow.hpp \
+		include/menuBar.hpp \
+		include/squareCalc.hpp \
+		include/windowWidget.hpp \
+		include/headers.h \
+		3rdparty/qcustomplot.h src/fileRead.cpp \
+		src/mainwindow.cpp \
+		src/menuBar.cpp \
+		src/squareCalc.cpp \
+		src/windowWidget.cpp \
+		main.cpp \
+		3rdparty/qcustomplot.cpp
 QMAKE_TARGET  = qt_aplication
 DESTDIR       = 
 TARGET        = qt_aplication
@@ -209,6 +222,7 @@ Makefile: qt_aplication.pro /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++/qmak
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_platformcompositor_support_private.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_printsupport.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_printsupport_private.pri \
+		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_serialport.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_service_support_private.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_sql.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_sql_private.pri \
@@ -290,6 +304,7 @@ Makefile: qt_aplication.pro /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++/qmak
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_platformcompositor_support_private.pri:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_printsupport.pri:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_printsupport_private.pri:
+/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_serialport.pri:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_service_support_private.pri:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_sql.pri:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_sql_private.pri:
@@ -344,8 +359,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents headers.h mainwindow.hpp menuBar.hpp squareCalc.hpp windowWidget.hpp $(DISTDIR)/
-	$(COPY_FILE) --parents main.cpp mainwindow.cpp menuBar.cpp squareCalc.cpp windowWidget.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents include/fileRead.hpp include/mainwindow.hpp include/menuBar.hpp include/squareCalc.hpp include/windowWidget.hpp include/headers.h 3rdparty/qcustomplot.h $(DISTDIR)/
+	$(COPY_FILE) --parents src/fileRead.cpp src/mainwindow.cpp src/menuBar.cpp src/squareCalc.cpp src/windowWidget.cpp main.cpp 3rdparty/qcustomplot.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -371,40 +386,53 @@ benchmark: first
 
 compiler_rcc_make_all:
 compiler_rcc_clean:
-compiler_moc_predefs_make_all: moc_predefs.h
+compiler_moc_predefs_make_all: mocs/moc_predefs.h
 compiler_moc_predefs_clean:
-	-$(DEL_FILE) moc_predefs.h
-moc_predefs.h: /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp
-	g++ -pipe -O2 -std=gnu++1z -Wall -Wextra -dM -E -o moc_predefs.h /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp
+	-$(DEL_FILE) mocs/moc_predefs.h
+mocs/moc_predefs.h: /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp
+	g++ -pipe -O2 -std=gnu++1z -Wall -Wextra -dM -E -o mocs/moc_predefs.h /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp
 
-compiler_moc_header_make_all: moc_mainwindow.cpp moc_menuBar.cpp moc_squareCalc.cpp moc_windowWidget.cpp
+compiler_moc_header_make_all: mocs/moc_fileRead.cpp mocs/moc_mainwindow.cpp mocs/moc_menuBar.cpp mocs/moc_squareCalc.cpp mocs/moc_windowWidget.cpp mocs/moc_qcustomplot.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_mainwindow.cpp moc_menuBar.cpp moc_squareCalc.cpp moc_windowWidget.cpp
-moc_mainwindow.cpp: mainwindow.hpp \
-		headers.h \
-		menuBar.hpp \
-		windowWidget.hpp \
-		moc_predefs.h \
+	-$(DEL_FILE) mocs/moc_fileRead.cpp mocs/moc_mainwindow.cpp mocs/moc_menuBar.cpp mocs/moc_squareCalc.cpp mocs/moc_windowWidget.cpp mocs/moc_qcustomplot.cpp
+mocs/moc_fileRead.cpp: include/fileRead.hpp \
+		mocs/moc_predefs.h \
 		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/lilycherly/work/diplom/qt_aplication/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/lilycherly/work/diplom/qt_aplication -I/home/lilycherly/work/diplom/qt_aplication -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtCharts -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/12 -I/usr/include/x86_64-linux-gnu/c++/12 -I/usr/include/c++/12/backward -I/usr/lib/gcc/x86_64-linux-gnu/12/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include mainwindow.hpp -o moc_mainwindow.cpp
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/lilycherly/work/diplom/qt_aplication/mocs/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/lilycherly/work/diplom/qt_aplication -I/home/lilycherly/work/diplom/qt_aplication/include -I/home/lilycherly/work/diplom/qt_aplication/3rdparty -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtCharts -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/12 -I/usr/include/x86_64-linux-gnu/c++/12 -I/usr/include/c++/12/backward -I/usr/lib/gcc/x86_64-linux-gnu/12/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include include/fileRead.hpp -o mocs/moc_fileRead.cpp
 
-moc_menuBar.cpp: menuBar.hpp \
-		headers.h \
-		moc_predefs.h \
+mocs/moc_mainwindow.cpp: include/mainwindow.hpp \
+		include/headers.h \
+		include/menuBar.hpp \
+		include/windowWidget.hpp \
+		3rdparty/qcustomplot.h \
+		include/fileRead.hpp \
+		mocs/moc_predefs.h \
 		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/lilycherly/work/diplom/qt_aplication/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/lilycherly/work/diplom/qt_aplication -I/home/lilycherly/work/diplom/qt_aplication -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtCharts -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/12 -I/usr/include/x86_64-linux-gnu/c++/12 -I/usr/include/c++/12/backward -I/usr/lib/gcc/x86_64-linux-gnu/12/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include menuBar.hpp -o moc_menuBar.cpp
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/lilycherly/work/diplom/qt_aplication/mocs/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/lilycherly/work/diplom/qt_aplication -I/home/lilycherly/work/diplom/qt_aplication/include -I/home/lilycherly/work/diplom/qt_aplication/3rdparty -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtCharts -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/12 -I/usr/include/x86_64-linux-gnu/c++/12 -I/usr/include/c++/12/backward -I/usr/lib/gcc/x86_64-linux-gnu/12/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include include/mainwindow.hpp -o mocs/moc_mainwindow.cpp
 
-moc_squareCalc.cpp: squareCalc.hpp \
-		headers.h \
-		moc_predefs.h \
+mocs/moc_menuBar.cpp: include/menuBar.hpp \
+		include/headers.h \
+		mocs/moc_predefs.h \
 		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/lilycherly/work/diplom/qt_aplication/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/lilycherly/work/diplom/qt_aplication -I/home/lilycherly/work/diplom/qt_aplication -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtCharts -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/12 -I/usr/include/x86_64-linux-gnu/c++/12 -I/usr/include/c++/12/backward -I/usr/lib/gcc/x86_64-linux-gnu/12/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include squareCalc.hpp -o moc_squareCalc.cpp
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/lilycherly/work/diplom/qt_aplication/mocs/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/lilycherly/work/diplom/qt_aplication -I/home/lilycherly/work/diplom/qt_aplication/include -I/home/lilycherly/work/diplom/qt_aplication/3rdparty -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtCharts -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/12 -I/usr/include/x86_64-linux-gnu/c++/12 -I/usr/include/c++/12/backward -I/usr/lib/gcc/x86_64-linux-gnu/12/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include include/menuBar.hpp -o mocs/moc_menuBar.cpp
 
-moc_windowWidget.cpp: windowWidget.hpp \
-		headers.h \
-		moc_predefs.h \
+mocs/moc_squareCalc.cpp: include/squareCalc.hpp \
+		include/headers.h \
+		mocs/moc_predefs.h \
 		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/lilycherly/work/diplom/qt_aplication/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/lilycherly/work/diplom/qt_aplication -I/home/lilycherly/work/diplom/qt_aplication -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtCharts -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/12 -I/usr/include/x86_64-linux-gnu/c++/12 -I/usr/include/c++/12/backward -I/usr/lib/gcc/x86_64-linux-gnu/12/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include windowWidget.hpp -o moc_windowWidget.cpp
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/lilycherly/work/diplom/qt_aplication/mocs/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/lilycherly/work/diplom/qt_aplication -I/home/lilycherly/work/diplom/qt_aplication/include -I/home/lilycherly/work/diplom/qt_aplication/3rdparty -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtCharts -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/12 -I/usr/include/x86_64-linux-gnu/c++/12 -I/usr/include/c++/12/backward -I/usr/lib/gcc/x86_64-linux-gnu/12/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include include/squareCalc.hpp -o mocs/moc_squareCalc.cpp
+
+mocs/moc_windowWidget.cpp: include/windowWidget.hpp \
+		include/headers.h \
+		3rdparty/qcustomplot.h \
+		mocs/moc_predefs.h \
+		/usr/lib/qt5/bin/moc
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/lilycherly/work/diplom/qt_aplication/mocs/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/lilycherly/work/diplom/qt_aplication -I/home/lilycherly/work/diplom/qt_aplication/include -I/home/lilycherly/work/diplom/qt_aplication/3rdparty -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtCharts -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/12 -I/usr/include/x86_64-linux-gnu/c++/12 -I/usr/include/c++/12/backward -I/usr/lib/gcc/x86_64-linux-gnu/12/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include include/windowWidget.hpp -o mocs/moc_windowWidget.cpp
+
+mocs/moc_qcustomplot.cpp: 3rdparty/qcustomplot.h \
+		mocs/moc_predefs.h \
+		/usr/lib/qt5/bin/moc
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/lilycherly/work/diplom/qt_aplication/mocs/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/lilycherly/work/diplom/qt_aplication -I/home/lilycherly/work/diplom/qt_aplication/include -I/home/lilycherly/work/diplom/qt_aplication/3rdparty -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtCharts -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/12 -I/usr/include/x86_64-linux-gnu/c++/12 -I/usr/include/c++/12/backward -I/usr/lib/gcc/x86_64-linux-gnu/12/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include 3rdparty/qcustomplot.h -o mocs/moc_qcustomplot.cpp
 
 compiler_moc_objc_header_make_all:
 compiler_moc_objc_header_clean:
@@ -422,41 +450,58 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 
 ####### Compile
 
-main.o: main.cpp mainwindow.hpp \
-		headers.h \
-		menuBar.hpp \
-		windowWidget.hpp
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o main.cpp
+objs/fileRead.o: src/fileRead.cpp include/fileRead.hpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o objs/fileRead.o src/fileRead.cpp
 
-mainwindow.o: mainwindow.cpp mainwindow.hpp \
-		headers.h \
-		menuBar.hpp \
-		windowWidget.hpp
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o mainwindow.cpp
+objs/mainwindow.o: src/mainwindow.cpp include/mainwindow.hpp \
+		include/headers.h \
+		include/menuBar.hpp \
+		include/windowWidget.hpp \
+		3rdparty/qcustomplot.h \
+		include/fileRead.hpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o objs/mainwindow.o src/mainwindow.cpp
 
-menuBar.o: menuBar.cpp menuBar.hpp \
-		headers.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o menuBar.o menuBar.cpp
+objs/menuBar.o: src/menuBar.cpp include/menuBar.hpp \
+		include/headers.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o objs/menuBar.o src/menuBar.cpp
 
-squareCalc.o: squareCalc.cpp squareCalc.hpp \
-		headers.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o squareCalc.o squareCalc.cpp
+objs/squareCalc.o: src/squareCalc.cpp include/squareCalc.hpp \
+		include/headers.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o objs/squareCalc.o src/squareCalc.cpp
 
-windowWidget.o: windowWidget.cpp windowWidget.hpp \
-		headers.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o windowWidget.o windowWidget.cpp
+objs/windowWidget.o: src/windowWidget.cpp include/windowWidget.hpp \
+		include/headers.h \
+		3rdparty/qcustomplot.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o objs/windowWidget.o src/windowWidget.cpp
 
-moc_mainwindow.o: moc_mainwindow.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_mainwindow.o moc_mainwindow.cpp
+objs/main.o: main.cpp include/mainwindow.hpp \
+		include/headers.h \
+		include/menuBar.hpp \
+		include/windowWidget.hpp \
+		3rdparty/qcustomplot.h \
+		include/fileRead.hpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o objs/main.o main.cpp
 
-moc_menuBar.o: moc_menuBar.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_menuBar.o moc_menuBar.cpp
+objs/qcustomplot.o: 3rdparty/qcustomplot.cpp 3rdparty/qcustomplot.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o objs/qcustomplot.o 3rdparty/qcustomplot.cpp
 
-moc_squareCalc.o: moc_squareCalc.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_squareCalc.o moc_squareCalc.cpp
+objs/moc_fileRead.o: mocs/moc_fileRead.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o objs/moc_fileRead.o mocs/moc_fileRead.cpp
 
-moc_windowWidget.o: moc_windowWidget.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_windowWidget.o moc_windowWidget.cpp
+objs/moc_mainwindow.o: mocs/moc_mainwindow.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o objs/moc_mainwindow.o mocs/moc_mainwindow.cpp
+
+objs/moc_menuBar.o: mocs/moc_menuBar.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o objs/moc_menuBar.o mocs/moc_menuBar.cpp
+
+objs/moc_squareCalc.o: mocs/moc_squareCalc.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o objs/moc_squareCalc.o mocs/moc_squareCalc.cpp
+
+objs/moc_windowWidget.o: mocs/moc_windowWidget.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o objs/moc_windowWidget.o mocs/moc_windowWidget.cpp
+
+objs/moc_qcustomplot.o: mocs/moc_qcustomplot.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o objs/moc_qcustomplot.o mocs/moc_qcustomplot.cpp
 
 ####### Install
 
