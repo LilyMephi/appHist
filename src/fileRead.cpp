@@ -89,7 +89,7 @@ void FileReader::readFileContent() {
     QString line = in.readLine();
     if (line.isEmpty()) continue;
     bool ok;
-    double value = line.toDouble(&ok);
+    int value = line.toInt(&ok);
     if (ok) {
       ++content[value];
     }

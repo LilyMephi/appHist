@@ -14,10 +14,10 @@ EQ            = =
 
 CC            = gcc
 CXX           = g++
-DEFINES       = -DQT_NO_DEBUG -DQT_CHARTS_LIB -DQT_PRINTSUPPORT_LIB -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB
+DEFINES       = -DQT_NO_DEBUG -DQT_CHARTS_LIB -DQT_PRINTSUPPORT_LIB -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_SERIALPORT_LIB -DQT_CORE_LIB
 CFLAGS        = -pipe -O2 -Wall -Wextra -D_REENTRANT -fPIC $(DEFINES)
 CXXFLAGS      = -pipe -O2 -std=gnu++1z -Wall -Wextra -D_REENTRANT -fPIC $(DEFINES)
-INCPATH       = -I. -Iinclude -I3rdparty -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtCharts -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -Imocs -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++
+INCPATH       = -I. -Iinclude -I3rdparty -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtCharts -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtSerialPort -I/usr/include/x86_64-linux-gnu/qt5/QtCore -Imocs -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++
 QMAKE         = /usr/lib/qt5/bin/qmake
 DEL_FILE      = rm -f
 CHK_DIR_EXISTS= test -d
@@ -40,7 +40,7 @@ DISTNAME      = qt_aplication1.0.0
 DISTDIR = /home/lilycherly/work/diplom/qt_aplication/objs/qt_aplication1.0.0
 LINK          = g++
 LFLAGS        = -Wl,-O1
-LIBS          = $(SUBLIBS) /usr/lib/x86_64-linux-gnu/libQt5Charts.so /usr/lib/x86_64-linux-gnu/libQt5PrintSupport.so /usr/lib/x86_64-linux-gnu/libQt5Widgets.so /usr/lib/x86_64-linux-gnu/libQt5Gui.so /usr/lib/x86_64-linux-gnu/libQt5Core.so -lGL -lpthread   
+LIBS          = $(SUBLIBS) /usr/lib/x86_64-linux-gnu/libQt5Charts.so /usr/lib/x86_64-linux-gnu/libQt5PrintSupport.so /usr/lib/x86_64-linux-gnu/libQt5Widgets.so /usr/lib/x86_64-linux-gnu/libQt5Gui.so /usr/lib/x86_64-linux-gnu/libQt5SerialPort.so /usr/lib/x86_64-linux-gnu/libQt5Core.so -lGL -lpthread   
 AR            = ar cqs
 RANLIB        = 
 SED           = sed
@@ -398,41 +398,41 @@ compiler_moc_header_clean:
 mocs/moc_fileRead.cpp: include/fileRead.hpp \
 		mocs/moc_predefs.h \
 		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/lilycherly/work/diplom/qt_aplication/mocs/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/lilycherly/work/diplom/qt_aplication -I/home/lilycherly/work/diplom/qt_aplication/include -I/home/lilycherly/work/diplom/qt_aplication/3rdparty -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtCharts -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/12 -I/usr/include/x86_64-linux-gnu/c++/12 -I/usr/include/c++/12/backward -I/usr/lib/gcc/x86_64-linux-gnu/12/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include include/fileRead.hpp -o mocs/moc_fileRead.cpp
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/lilycherly/work/diplom/qt_aplication/mocs/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/lilycherly/work/diplom/qt_aplication -I/home/lilycherly/work/diplom/qt_aplication/include -I/home/lilycherly/work/diplom/qt_aplication/3rdparty -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtCharts -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtSerialPort -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/12 -I/usr/include/x86_64-linux-gnu/c++/12 -I/usr/include/c++/12/backward -I/usr/lib/gcc/x86_64-linux-gnu/12/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include include/fileRead.hpp -o mocs/moc_fileRead.cpp
 
 mocs/moc_mainwindow.cpp: include/mainwindow.hpp \
+		include/fileRead.hpp \
 		include/headers.h \
 		include/menuBar.hpp \
 		include/windowWidget.hpp \
 		3rdparty/qcustomplot.h \
-		include/fileRead.hpp \
 		mocs/moc_predefs.h \
 		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/lilycherly/work/diplom/qt_aplication/mocs/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/lilycherly/work/diplom/qt_aplication -I/home/lilycherly/work/diplom/qt_aplication/include -I/home/lilycherly/work/diplom/qt_aplication/3rdparty -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtCharts -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/12 -I/usr/include/x86_64-linux-gnu/c++/12 -I/usr/include/c++/12/backward -I/usr/lib/gcc/x86_64-linux-gnu/12/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include include/mainwindow.hpp -o mocs/moc_mainwindow.cpp
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/lilycherly/work/diplom/qt_aplication/mocs/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/lilycherly/work/diplom/qt_aplication -I/home/lilycherly/work/diplom/qt_aplication/include -I/home/lilycherly/work/diplom/qt_aplication/3rdparty -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtCharts -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtSerialPort -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/12 -I/usr/include/x86_64-linux-gnu/c++/12 -I/usr/include/c++/12/backward -I/usr/lib/gcc/x86_64-linux-gnu/12/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include include/mainwindow.hpp -o mocs/moc_mainwindow.cpp
 
 mocs/moc_menuBar.cpp: include/menuBar.hpp \
 		include/headers.h \
 		mocs/moc_predefs.h \
 		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/lilycherly/work/diplom/qt_aplication/mocs/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/lilycherly/work/diplom/qt_aplication -I/home/lilycherly/work/diplom/qt_aplication/include -I/home/lilycherly/work/diplom/qt_aplication/3rdparty -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtCharts -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/12 -I/usr/include/x86_64-linux-gnu/c++/12 -I/usr/include/c++/12/backward -I/usr/lib/gcc/x86_64-linux-gnu/12/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include include/menuBar.hpp -o mocs/moc_menuBar.cpp
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/lilycherly/work/diplom/qt_aplication/mocs/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/lilycherly/work/diplom/qt_aplication -I/home/lilycherly/work/diplom/qt_aplication/include -I/home/lilycherly/work/diplom/qt_aplication/3rdparty -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtCharts -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtSerialPort -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/12 -I/usr/include/x86_64-linux-gnu/c++/12 -I/usr/include/c++/12/backward -I/usr/lib/gcc/x86_64-linux-gnu/12/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include include/menuBar.hpp -o mocs/moc_menuBar.cpp
 
 mocs/moc_squareCalc.cpp: include/squareCalc.hpp \
 		include/headers.h \
 		mocs/moc_predefs.h \
 		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/lilycherly/work/diplom/qt_aplication/mocs/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/lilycherly/work/diplom/qt_aplication -I/home/lilycherly/work/diplom/qt_aplication/include -I/home/lilycherly/work/diplom/qt_aplication/3rdparty -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtCharts -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/12 -I/usr/include/x86_64-linux-gnu/c++/12 -I/usr/include/c++/12/backward -I/usr/lib/gcc/x86_64-linux-gnu/12/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include include/squareCalc.hpp -o mocs/moc_squareCalc.cpp
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/lilycherly/work/diplom/qt_aplication/mocs/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/lilycherly/work/diplom/qt_aplication -I/home/lilycherly/work/diplom/qt_aplication/include -I/home/lilycherly/work/diplom/qt_aplication/3rdparty -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtCharts -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtSerialPort -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/12 -I/usr/include/x86_64-linux-gnu/c++/12 -I/usr/include/c++/12/backward -I/usr/lib/gcc/x86_64-linux-gnu/12/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include include/squareCalc.hpp -o mocs/moc_squareCalc.cpp
 
 mocs/moc_windowWidget.cpp: include/windowWidget.hpp \
 		include/headers.h \
 		3rdparty/qcustomplot.h \
 		mocs/moc_predefs.h \
 		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/lilycherly/work/diplom/qt_aplication/mocs/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/lilycherly/work/diplom/qt_aplication -I/home/lilycherly/work/diplom/qt_aplication/include -I/home/lilycherly/work/diplom/qt_aplication/3rdparty -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtCharts -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/12 -I/usr/include/x86_64-linux-gnu/c++/12 -I/usr/include/c++/12/backward -I/usr/lib/gcc/x86_64-linux-gnu/12/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include include/windowWidget.hpp -o mocs/moc_windowWidget.cpp
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/lilycherly/work/diplom/qt_aplication/mocs/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/lilycherly/work/diplom/qt_aplication -I/home/lilycherly/work/diplom/qt_aplication/include -I/home/lilycherly/work/diplom/qt_aplication/3rdparty -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtCharts -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtSerialPort -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/12 -I/usr/include/x86_64-linux-gnu/c++/12 -I/usr/include/c++/12/backward -I/usr/lib/gcc/x86_64-linux-gnu/12/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include include/windowWidget.hpp -o mocs/moc_windowWidget.cpp
 
 mocs/moc_qcustomplot.cpp: 3rdparty/qcustomplot.h \
 		mocs/moc_predefs.h \
 		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/lilycherly/work/diplom/qt_aplication/mocs/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/lilycherly/work/diplom/qt_aplication -I/home/lilycherly/work/diplom/qt_aplication/include -I/home/lilycherly/work/diplom/qt_aplication/3rdparty -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtCharts -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/12 -I/usr/include/x86_64-linux-gnu/c++/12 -I/usr/include/c++/12/backward -I/usr/lib/gcc/x86_64-linux-gnu/12/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include 3rdparty/qcustomplot.h -o mocs/moc_qcustomplot.cpp
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/lilycherly/work/diplom/qt_aplication/mocs/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/lilycherly/work/diplom/qt_aplication -I/home/lilycherly/work/diplom/qt_aplication/include -I/home/lilycherly/work/diplom/qt_aplication/3rdparty -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtCharts -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtSerialPort -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/12 -I/usr/include/x86_64-linux-gnu/c++/12 -I/usr/include/c++/12/backward -I/usr/lib/gcc/x86_64-linux-gnu/12/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include 3rdparty/qcustomplot.h -o mocs/moc_qcustomplot.cpp
 
 compiler_moc_objc_header_make_all:
 compiler_moc_objc_header_clean:
@@ -454,11 +454,11 @@ objs/fileRead.o: src/fileRead.cpp include/fileRead.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o objs/fileRead.o src/fileRead.cpp
 
 objs/mainwindow.o: src/mainwindow.cpp include/mainwindow.hpp \
+		include/fileRead.hpp \
 		include/headers.h \
 		include/menuBar.hpp \
 		include/windowWidget.hpp \
-		3rdparty/qcustomplot.h \
-		include/fileRead.hpp
+		3rdparty/qcustomplot.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o objs/mainwindow.o src/mainwindow.cpp
 
 objs/menuBar.o: src/menuBar.cpp include/menuBar.hpp \
@@ -475,11 +475,11 @@ objs/windowWidget.o: src/windowWidget.cpp include/windowWidget.hpp \
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o objs/windowWidget.o src/windowWidget.cpp
 
 objs/main.o: main.cpp include/mainwindow.hpp \
+		include/fileRead.hpp \
 		include/headers.h \
 		include/menuBar.hpp \
 		include/windowWidget.hpp \
-		3rdparty/qcustomplot.h \
-		include/fileRead.hpp
+		3rdparty/qcustomplot.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o objs/main.o main.cpp
 
 objs/qcustomplot.o: 3rdparty/qcustomplot.cpp 3rdparty/qcustomplot.h

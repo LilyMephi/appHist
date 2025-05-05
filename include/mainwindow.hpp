@@ -3,7 +3,8 @@
 
 #include <QFileSystemWatcher>
 #include <QTimer>
-
+#include <QSerialPort>
+#include <QSerialPortInfo>
 #include "fileRead.hpp"
 #include "headers.h"
 #include "menuBar.hpp"
@@ -30,8 +31,10 @@ QT_CHARTS_USE_NAMESPACE  // Используем пространство име
   void saveHist();
   void resizeDialog();
   void setupMenuBar();
-  void loadFromUSB();
-  void loadFromUART();
+  void showPortDialog();
+  void readData();
+  void connectToPort();
+  void disconnectPort();
   void setupAtmegaBar();
   //    bool save();
   //    bool saveAs();
@@ -44,6 +47,7 @@ QT_CHARTS_USE_NAMESPACE  // Используем пространство име
   QTimer *dataTimer;
   QMap<int, int> allData;
   FileReader *fileReader;
+  QSerialPort *serial;
 };
 //#include "main.moc"
 #endif  // MAINWINDOW_H

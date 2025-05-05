@@ -6,12 +6,14 @@ MainWindow::MainWindow(QWidget *parent = nullptr) : QMainWindow(parent) {
   fileReader = new FileReader(this);
   // Создаем виджет и распологаем его по середине
   central = new Window(this);
+  serial = new QSerialPort(this);
   setCentralWidget(central);
 
   connect(fileReader, &FileReader::fileUpdated, this,
           &MainWindow::onFileUpdated);
   connect(fileReader, &FileReader::errorOccurred, this,
           &MainWindow::onErrorOccurred);
+          connect(serial, &QSerialPort::readyRead, this, &MainWindow::readData);
 
   setupMenuBar();
   setupAtmegaBar();
@@ -53,24 +55,116 @@ void MainWindow::setupAtmegaBar() {
   // Создаем менюбар
   menu = this->menuBar();
   // Добавляем вкладку "File"
-  QMenu *fileMenu = menu->addMenu("Atmega");
+  QMenu *fileMenu = menu->addMenu("SerialPort");
 
   // Добовлям стиль
   QApplication::setStyle("MacOs");
 
   // Добавляем действие "Open File"
-  QAction *openFileAction = fileMenu->addAction("USB");
-  connect(openFileAction, &QAction::triggered, this, &MainWindow::loadFromUSB);
-
-  // Добавляем действие "save hist"
-  QAction *saveHistAction = fileMenu->addAction("UART");
-  connect(saveHistAction, &QAction::triggered, this, &MainWindow::saveHist);
+  QAction *connectAction = fileMenu->addAction("Connection");
+  connect(connectAction, &QAction::triggered, this, &MainWindow::showPortDialog);
+  // Действие для отключения
+  QAction *disconnectAction = fileMenu->addAction("Disconnection");
+  connect(disconnectAction, &QAction::triggered, this, &MainWindow::disconnectPort);
+  // // Добавляем действие "save hist"
+  // QAction *saveHistAction = fileMenu->addAction("UART");
+  // connect(saveHistAction, &QAction::triggered, this, &MainWindow::saveHist);
 }
 
-void MainWindow::loadFromUSB() {}
+void MainWindow::showPortDialog() {
+  // Получаем список доступных портов
+  QList<QSerialPortInfo> ports = QSerialPortInfo::availablePorts();
+  
+  if (ports.isEmpty()) {
+      QMessageBox::warning(this, "Ошибка", "Не найдено доступных COM-портов!");
+      return;
+  }
+  
+  // Создаем диалог для выбора порта
+  QMenu portMenu(this);
+  portMenu.setTitle("Выберите порт");
+  
+  // Добавляем доступные порты в меню
+  for (const QSerialPortInfo &portInfo : ports) {
+      QString portName = portInfo.portName();
+      QAction *portAction = new QAction(portName, this);
+      portAction->setData(portName);
+      portMenu.addAction(portAction);
+      connect(portAction, &QAction::triggered, this, &MainWindow::connectToPort);
+  }
+  
+  // Показываем меню под курсором
+  portMenu.exec(QCursor::pos());
+}
 
-void MainWindow::loadFromUART() {}
+void MainWindow::connectToPort() {
+  QAction *action = qobject_cast<QAction*>(sender());
+  if (!action) return;
+  
+  QString portName = action->data().toString();
+  
+  // Настраиваем и открываем порт
+  serial->setPortName(portName);
+  serial->setBaudRate(QSerialPort::Baud9600);
+  serial->setDataBits(QSerialPort::Data8);
+  serial->setParity(QSerialPort::NoParity);
+  serial->setStopBits(QSerialPort::OneStop);
+  serial->setFlowControl(QSerialPort::NoFlowControl);
+  
+  if (serial->open(QIODevice::ReadWrite)) {
+      QMessageBox::information(this, "Успех", 
+                             QString("Успешно подключено к %1").arg(portName));
+  } else {
+      QMessageBox::critical(this, "Ошибка", 
+                           QString("Не удалось подключиться к %1: %2")
+                           .arg(portName).arg(serial->errorString()));
+  }
+}
 
+void MainWindow::disconnectPort() {
+  if (serial->isOpen()) {
+      serial->close();
+      QMessageBox::information(this, "Отключение", "Порт отключен");
+  } else {
+      QMessageBox::warning(this, "Ошибка", "Порт не был подключен");
+  }
+}
+
+void MainWindow::readData() {
+  // Чтение данных из порта
+  static QByteArray buffer;
+  QMap<int, int> content;    
+  buffer += serial->readAll();
+  
+  // Обрабатываем все целые числа в буфере
+  while (true) {
+      // Ищем разделитель (например, пробел или перевод строки)
+      int separatorPos = buffer.indexOf(' ');
+      if (separatorPos == -1) {
+          separatorPos = buffer.indexOf('\n');
+      }
+      if (separatorPos == -1) {
+          separatorPos = buffer.indexOf('\r');
+      }
+      
+      if (separatorPos == -1) break; // Нет полного числа
+      
+      QByteArray numberStr = buffer.left(separatorPos);
+      bool ok;
+      int value = numberStr.toInt(&ok);
+      
+      if (ok) {
+        ++content[value];
+      } 
+      buffer = buffer.mid(separatorPos + 1);
+  }
+
+  for (auto it = content.begin(); it != content.end(); ++it) {
+    allData[it.key()] += it.value();
+  }
+
+  central->updatePlot(allData);
+}
 // void MainWindow::openFile(){
 //     // Открываем диалог выбора файла
 //     QString fileName = QFileDialog::getOpenFileName(this, "Открыть файл", "",
