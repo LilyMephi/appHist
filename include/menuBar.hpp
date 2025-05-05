@@ -3,21 +3,21 @@
 #include "headers.h"
 
 class ResizeDialog : public QDialog {
-    Q_OBJECT
+  Q_OBJECT
 
-public:
-    ResizeDialog(QWidget *) ;
-    // Получить введенные значения
-    double xMin() const;   
-    double xMax() const;
-    double yMin() const;
-    double yMax() const;
+ public:
+  ResizeDialog(QWidget *);
+  // Получить введенные значения
+  double xMin() const;
+  double xMax() const;
+  double yMin() const;
+  double yMax() const;
 
-private:
-    QLineEdit *xMinEdit;
-    QLineEdit *xMaxEdit;
-    QLineEdit *yMinEdit;
-    QLineEdit *yMaxEdit;
+ private:
+  QLineEdit *xMinEdit;
+  QLineEdit *xMaxEdit;
+  QLineEdit *yMinEdit;
+  QLineEdit *yMaxEdit;
 };
 
 #endif
